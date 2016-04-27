@@ -5,10 +5,11 @@ function main {
 	bootset().
 	bootstamp().
 	timestamp().
-	chstatus().
+	ckstatus().
 }
 // Supporting functions follow
 // ----+----+----+
+
 
 // ----+----+----+
 // File Functions following
@@ -21,18 +22,21 @@ function fclean { parameter file. if exists(file) = true { delete file. } else r
 // End File Functions
 // ----+----+----+
 
+
 // ----+----+----+
 // Display and Logging Functions
 function pr { parameter quo, amt, col, row. print quo + amt at (col,row). }
 // End Display and Logging Functions
 // ----+----+----+
 
+
 // ----+----+----+
 // Lexicon Functions
 function lexadd { parameter lexi, a, b. lexi:add (a,b). }
-function lexsave { parameter lexi, file, location. switch to location. log lexi to file. }
+function lexsave { parameter lexi, file, location. switch to location. fclean (file). log lexi to file. }
 // End Lex Functions
 // ----+----+----+
+
 
 // ----+----+----+
 // system settings
@@ -42,6 +46,7 @@ function termset { set terminal:width to 53. set terminal:height to 55. clearscr
 function shutdown { hudtext("I have been running for " + round(time:seconds-bstamp,1) + " seconds.", 10, 2, 12, red, true). return. }
 // end system setings
 // ----+----+----+
+
 
 // ----+----+----+
 // assists in replacing sysset function
@@ -54,20 +59,13 @@ function bootset {
 	lexadd (rcs,off).
 	lexadd (sas,off).
 }
-// ----+----+----+
-
 function bset {
 	parameter lexi,a,b,file,location.
 	lexadd (lexi,a,b).
 	lexsave (lexi,file,location).
 }
+// ----+----+----+
 
-
-
-function pr {
-	parameter quo, amt, col, row.
-	print quo + amt at (col,row).
-}
 
 function ckstatus {
 	// Cheack Status
@@ -89,23 +87,28 @@ function ckstatus {
 	run_mission("ORBITING","orb.ks").
 	run_mission("LANDED","lan.ks").
 	run_mission("SPLASHED","spl.ks").
-	
+	shutdown().
 }
 
+
+
+
+// ----+----+----+
+// Human Readable Terminal Output (HRTO)
 function hrto {
-	// Human Readable Terminal Output (HRTO)
 	
-	prpotential(1).
-	pratmo(4).
-	prship(8).
-	pralt(13).
-	prpos(20).
-	prapo(15).
-	prperi(16).
-	precc(19).
-	prspd(25).
-	pratmo(21).
-	prbody(30).
+	set pl to 1.
+	prpotential(pl).
+	pratmo(pl).
+	prship(pl).
+	pralt(pl).
+	prpos(pl).
+	prapo(pl).
+	prperi(pl).
+	precc(pl).
+	prspd(pl).
+	pratmo(pl).
+	prbody(pl).
 }
 
 function prpos {
@@ -113,6 +116,7 @@ function prpos {
 	parameter pl. // Print Location pl
 	pr ("POS:LAT : ",round(latitude,2),2,pl).
 	pr ("POS:LONG: ",round(longitude,2),30,pl).
+	return (pl+2).
 }
 
 function pralt {
@@ -120,6 +124,7 @@ function pralt {
 	parameter pl.
 	pr ("ALT:SEA : ",round(altitude,2),2,pl).
 	pr ("ALT:GRND: ",round(alt:radar,2),30,pl).
+	return (pl+2).
 }
 
 function prapo {
@@ -127,6 +132,7 @@ function prapo {
 	parameter pl.
 	pr ("ALT:APO : ",round(alt:apoapsis),2,pl).
 	pr ("ETA:APO : ",round(eta:apoapsis),30,pl).
+	return (pl+2).
 }
 
 function prperi {
@@ -134,12 +140,14 @@ function prperi {
 	parameter pl.
 	pr ("ALT:PERI: ",round(alt:periapsis),2,pl).
 	pr ("ETA:PERI: ",round(eta:periapsis),30,pl).
+	return (pl+2).
 }
 
 function precc {
 	// Eccentricity
 	parameter pl.
 	pr ("ECC:    : ",round( ( alt:apoapsis-alt:periapsis ) / ( (2*body:radius)+(alt:apoapsis)+(alt:periapsis) ) ,2),2,pl).
+	return (pl+2).
 }
 
 function prspd {
@@ -150,6 +158,7 @@ function prspd {
 	pr ("SPD:AIR : ",round(airspeed),2,pl).
 	set pl to pl + 1.
 	pr ("SPD:GRND: ",round(groundspeed),2,pl).
+	return (pl+2).
 }
 
 function pratmo {
@@ -163,6 +172,7 @@ function pratmo {
 	set pl to pl + 1.
 	pr ("PRES:SEA: ",round(body:atm:sealevelpressure,6),2,pl).
 	pr ("ATM:HGHT: ",round(body:atm:height,6),30,pl).
+	return (pl+2).
 
 }
 
@@ -183,7 +193,7 @@ function prship {
 	set pl to pl + 1.
 	pr ("ACC:MAG : ",round(ship:sensors:acc:mag,6),2,pl).
 	pr ("GRAV:MAG: ",round(ship:sensors:grav:mag,6),30,pl).
-	
+	return (pl+2).
 }
 
 function prbody {
@@ -219,6 +229,9 @@ function prpotential {
 	set pl to pl + 1.
 	pr ("MASS:NOW: ",round(ship:mass,6),2,pl).
 	pr ("MASS:SPT: ",round(ship:wetmass-ship:mass,6),30,pl).
+	return (pl+2).
 }
+// End HRTO
+
 
 main().
