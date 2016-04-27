@@ -1,0 +1,73 @@
+// kOS Challange.txt
+// Output information to HUD
+// Understanding strings and variables
+// Scripting
+// Understanding scripts.ks, functions, lock and set variables
+// Understanding lists and lexicons
+// BootScript Alpha
+
+// Boot Script Processes (BSP)
+	clearscreen.
+	print "Booting up.".
+	set boottime to time:seconds.
+	print "The time is: " + round(time:seconds).
+// Who Am I Processes (WAIP)
+	print "My name is: " + ship:name.
+	print "I am currently: " + status.
+// DEBUG: print exists (ship:name + "runmode.log").
+	if exists (ship:name + "runmode.log") is false {
+		set runmode to 1. 
+		log "set runmode to " + runmode + "." to ship:name + "runmode.log".
+	}.
+	if status is landed {
+		delete ship:name + "runmode.log".
+		set runmode to 1.
+		log "set runmode to " + runmode + "." to ship:name + "runmode.log".
+	}
+	run ship:name + "runmode.log".
+	print "My runmode is: " + runmode.
+	set runtime to round(time:seconds - boottime,1).
+	print "I have been running for: " + runtime.
+// TODO: get missionname from runmode
+
+// Output these things:
+//
+// POSITION
+print "POS:LONG: " + longitude.
+print "POS:LAT : " + latitude.
+print "ALT:SEA : " + altitude.
+print "ALT:GRND: " + alt:radar.
+// body
+// Biome
+// DIRECTION
+print "ETA:APO : " + round(eta:apoapsis).
+print "ALT:APO : " + round(alt:apoapsis).
+print "ETA:PERI: " + round(eta:periapsis).
+print "ALT:PERI: " + round(alt:periapsis).
+
+// Vertical Speed, Horizontal Speed
+print "SPD:VERT: " + round(verticalspeed).
+print "SPD:AIR : " + round(airspeed).
+print "SPD:GRND: " + round(groundspeed).
+
+// Heading (HDG), vector
+set myvel to list(velocity:surface,velocity:orbit). print myvel.
+
+
+// ORBIT
+// Angel to UpNode, Time to UpNode
+// Angle to DownNode, Time to DownNode
+// eccentricity
+// semi-major axis, semi-minor axis
+// angle to prograde, angle to retrograde
+// VESSEL
+	// Get Parts
+	// Get Stages
+	// Get Science
+	// Get Paraschoots
+	// Get Drougeschoots	
+	// Thrust to Weight Ratio
+	// Total Mass
+	// IPS of stage
+	// delta-V of stage
+	// delta-V remaining in stage
